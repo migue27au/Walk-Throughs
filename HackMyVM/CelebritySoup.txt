@@ -15,21 +15,23 @@ By Migue27au
       · Stego decode of the image and getting --> digital-brain-is-transcending
     1.4.3. Looking the page find some secrets in /sector1,2,3...
       Creating a script in order to get the secret fastly:
-      __________________________________________________________________________
-      
-        #!/bin/bash
-        secret=""
-        VAR1=http://<targetIP>/sector;
-        VAR2=".html"
-        for i in {1..10..1}; do
-          VAR3=$VAR1$i$VAR2
-          response=$( curl $VAR3 -s | tail -n 4 | head -n 1 | cut -d '"' -f 2)
-          if [[ $response != "" ]] && [[ $response != "</main>" ]]; then
-           secret=$secret$response
-          fi;
-          echo "URL: $VAR3 --> $secret";
-        done;
-        echo "secret --> $secret";
+        ____________________________________________________________________________
+       |                                                                            |
+       |  #!/bin/bash                                                               |
+       |  secret=""                                                                 |
+       |  VAR1=http://<targetIP>/sector;                                            |
+       |  VAR2=".html"                                                              |
+       |  for i in {1..10..1}; do                                                   |
+       |    VAR3=$VAR1$i$VAR2                                                       |
+       |    response=$( curl $VAR3 -s | tail -n 4 | head -n 1 | cut -d '"' -f 2)    |
+       |    if [[ $response != "" ]] && [[ $response != "</main>" ]]; then          |
+       |      secret=$secret$response                                               |
+       |    fi                                                                      |
+       |    echo "URL: $VAR3 --> $secret";                                          |
+       |  done;                                                                     |
+       |  echo "secret --> $secret";                                                |
+       |____________________________________________________________________________|  
+          
     1.4.4 Script return the secret --> puppetmaster
       __________________________________________________________________________
   1.5 Candidate to credentials puppetmaster:digital-brain-is-transcending

